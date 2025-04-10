@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Set the path to your .wav file
-file_path = 'D:/Github Document/voice-recognize/audio_files/test1.wav'
+file_path = 'D:/Github Document/voice-recognize/audio_files/test2_male.wav'
 
 # Load the audio
 y, sr = librosa.load(file_path)
