@@ -1,21 +1,32 @@
+import sounddevice as sd
+from scipy.io.wavfile import write
 import librosa
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-# Set the path to your .wav file
-file_path = 'D:/Github Document/voice-recognize/audio_files/test2_male.wav'
+# === 1. Record Audio ===
+duration = 5  # seconds
+sample_rate = 22050  # Hz
 
-# Load the audio
-y, sr = librosa.load(file_path)
+print("Recording...")
+audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='float32')
+sd.wait()
+print("Recording finished.")
 
-# Estimate the fundamental frequency (F0)
+# Save to a temporary file
+output_path = "mic_input.wav"
+write(output_path, sample_rate, audio)
+
+# === 2. Load and Process Audio ===
+y, sr = librosa.load(output_path, sr=None)
+
 f0, voiced_flag, voiced_probs = librosa.pyin(
     y,
     fmin=librosa.note_to_hz('C2'),
     fmax=librosa.note_to_hz('C7')
 )
 
-# Remove unvoiced sections
 f0_clean = f0[~np.isnan(f0)]
 
 if len(f0_clean) == 0:
@@ -29,7 +40,7 @@ else:
     else:
         print("Detected Voice: Female")
 
-    # Optional: plot the pitch curve
+    # === Optional: Plot pitch curve ===
     plt.figure(figsize=(10, 4))
     times = librosa.times_like(f0)
     plt.plot(times, f0, label='F0', color='purple')
@@ -39,3 +50,7 @@ else:
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
+# Optional: remove temp audio file
+if os.path.exists(output_path):
+    os.remove(output_path)
