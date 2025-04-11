@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import os
 
 # === 1. Record Audio ===
-duration = 5  # seconds
-sample_rate = 22050  # Hz
+duration = 6  # seconds
+sample_rate = 44000  # Hz
 
 print("Recording...")
 audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='float32')
